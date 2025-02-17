@@ -138,6 +138,9 @@ function checkMissingTimeFrames() {
 
 // Function to handle keydown events for changing time frames
 function handleKeyDown(event) {
+  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) return;
+  if (event.keyCode !== 37 && event.keyCode !== 39) return; // Only handle left and right arrow keys
+
   const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
   if (!activeButton) return;
 
