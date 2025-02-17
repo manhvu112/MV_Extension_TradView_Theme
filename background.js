@@ -4,7 +4,7 @@ chrome.runtime.onInstalled.addListener(() => {
       {
         conditions: [
           new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: { urlMatches: 'https://*.tradingview.com/*' },
+            pageUrl: { urlMatches: 'https://*.tradingview.com/chart/*' },
           })
         ],
         actions: [ new chrome.declarativeContent.ShowAction() ]
