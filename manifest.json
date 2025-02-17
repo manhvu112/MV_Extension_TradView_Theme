@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Auto Fullscreen and Add Transparent Button on TradingView",
+  "name": "MV TradingView",
   "version": "1.2",
-  "description": "Automatically presses Alt + Enter to enter fullscreen and adds a transparent Switch button on TradingView pages. Also applies AdGuard filters.",
+  "description": "Tuỳ chỉnh giao diện Tradingview của MV",
   "permissions": [
     "activeTab",
     "declarativeContent"
@@ -12,7 +12,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.tradingview.com/*"],
+      "matches": ["https://*.tradingview.com/chart/*"],
       "js": ["content.js"],
       "css": ["style.css"]
     }
@@ -20,9 +20,9 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
+      "16": "icons/TradingViewLogo.png",
+      "48": "icons/TradingViewLogo.png",
+      "128": "icons/TradingViewLogo.png"
     }
   }
 }
