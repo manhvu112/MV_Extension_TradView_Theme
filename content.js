@@ -136,24 +136,24 @@ function checkMissingTimeFrames() {
   }
 }
 
-// Function to handle keydown events for changing time frames
-function handleKeyDown(event) {
-  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) return;
-  if (event.keyCode !== 37 && event.keyCode !== 39) return; // Only handle left and right arrow keys
+// ------Nhấn phím mũi tên để di chuyển giữa các timeframe
+//function handleKeyDown(event) {
+//  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) return;
+//  if (event.keyCode !== 37 && event.keyCode !== 39) return; // Only handle left and right arrow keys
 
-  const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
-  if (!activeButton) return;
+//  const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
+//  if (!activeButton) return;
 
-  const buttons = Array.from(document.querySelectorAll('#header-toolbar-intervals button[role="radio"]'));
-  const activeIndex = buttons.indexOf(activeButton);
+//  const buttons = Array.from(document.querySelectorAll('#header-toolbar-intervals button[role="radio"]'));
+//  const activeIndex = buttons.indexOf(activeButton);
 
-  if (event.keyCode === 37) { // Left arrow key
-    const prevIndex = activeIndex > 0 ? activeIndex - 1 : buttons.length - 1;
-    buttons[prevIndex].click();
-  } else if (event.keyCode === 39) { // Right arrow key
-    const nextIndex = activeIndex < buttons.length - 1 ? activeIndex + 1 : 0;
-    buttons[nextIndex].click();
-  }
-}
+//  if (event.keyCode === 37) { // Left arrow key
+//    const prevIndex = activeIndex > 0 ? activeIndex - 1 : buttons.length - 1;
+//    buttons[prevIndex].click();
+//  } else if (event.keyCode === 39) { // Right arrow key
+//    const nextIndex = activeIndex < buttons.length - 1 ? activeIndex + 1 : 0;
+//    buttons[nextIndex].click();
+//  }
+//}
 
 document.addEventListener('keydown', handleKeyDown);
