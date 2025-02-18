@@ -66,12 +66,10 @@ function applyAdGuardFilters() {
     #header-toolbar-study-templates > button.button-merBkM5y.apply-common-tooltip.accessible-merBkM5y > div.button-ptpAHg8E.withoutText-ptpAHg8E.button-GwQQdU8S.isInteractive-GwQQdU8S { display: none !important; }
     #header-toolbar-indicators > button.button-merBkM5y.apply-common-tooltip.accessible-merBkM5y:last-child > div.arrow-merBkM5y { display: none !important; }
     #header-toolbar-chart-styles > button.menu-b3Cgff6l.button-merBkM5y.apply-common-tooltip.accessible-merBkM5y { display: none !important; }
-    div.js-rootresizer__contents.black-border-bigger-radius.layout-with-border-radius:nth-child(2) > div.layout__area--top:nth-child(3) > div.toolbar-qqNP9X6e > div.overflowWrap-qqNP9X6e > div.innerWrap-qqNP9X6e > div.menuWrap-qqNP9X6e { display: none !important; }
+    div.js-rootresizer__contents.black-border-bigger-radius.layout-with-border-radius:nth-child(2) > div.layout__area--top:nth-child(3) > div.toolbar-qqNP9X6e > div.overflowWrap-qqNP9X6e > div.innerWrap-qqNP9X6e { display: none !important; }
     #header-toolbar-chart-styles { display: none !important; }
-    div.js-rootresizer__contents.black-border-bigger-radius.layout-with-border-radius:nth-child(2) > div.layout__area--top:nth-child(3) > div.toolbar-qqNP9X6e > div.overflowWrap-qqNP9X6e > div.innerWrap-qqNP9X6e > div.menuWrap-qqNP9X6e { display: none !important; }
-    #header-toolbar-indicators > button.button-OhqNVIYA.button-ptpAHg8E.withText-ptpAHg8E.button-GwQQdU8S.apply-common-tooltip.isInteractive-GwQQdU8S.accessible-GwQQdU8S:first-child > div.js-button-OhqNVIYA { display: none !important; }
     div.js-rootresizer__contents.black-border-bigger-radius:nth-child(2) > div.layout__area--center:nth-child(5) > div.chart-toolbar.chart-controls-bar:last-child { display: none !important; }
-    div.js-rootresizer__contents.black-border-bigger-radius:nth-child(2) > div.layout__area--center.no-border-bottom-left-radius.no-border-bottom-right-radius.no-border-top-right-radius:nth-child(5) > div.chart-toolbar.chart-controls-bar:last-child { display: none !important; }
+    div.js-rootresizer__contents.black-border-bigger-radius:nth-child(2) > div.layout__area--center.no-border-bottom-left-radius.no-border-bottom-right-radius.no-border-top-right-radius:nth-child(5) > div.chart-toolbar.chart-controls-bar.last-child { display: none !important; }
     html.theme-dark .button-O36zDbH4 .blackButton-O36zDbH4 {
       background-color: #f2f2f2 !important;
       color: #f2f2f2 !important;
@@ -181,7 +179,7 @@ function checkMissingTimeFrames() {
     '480': '8h',
     '960': '16h'
   };
-  
+
   const missingTimeFrames = requiredTimeFrames.filter(timeFrame => !document.querySelector(`#header-toolbar-intervals [data-value="${timeFrame}"]`))
     .map(timeFrame => timeFrameNames[timeFrame]);
 
@@ -190,24 +188,32 @@ function checkMissingTimeFrames() {
   }
 }
 
-// ------Nhấn phím mũi tên để di chuyển giữa các timeframe
-//function handleKeyDown(event) {
-//  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) return;
-//  if (event.keyCode !== 37 && event.keyCode !== 39) return; // Only handle left and right arrow keys
-//
-//  const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
-//  if (!activeButton) return;
-//
-//  const buttons = Array.from(document.querySelectorAll('#header-toolbar-intervals button[role="radio"]'));
-//  const activeIndex = buttons.indexOf(activeButton);
-//
-//  if (event.keyCode === 37) { // Left arrow key
-//    const prevIndex = activeIndex > 0 ? activeIndex - 1 : buttons.length - 1;
-//    buttons[prevIndex].click();
-//  } else if (event.keyCode === 39) { // Right arrow key
-//    const nextIndex = activeIndex < buttons.length - 1 ? activeIndex + 1 : 0;
-//    buttons[nextIndex].click();
-//  }
-//}
+// Add variables for click and double-click handling of the ` key
+let keypressTimeout = null;
+let doubleClickCooldown = false;
 
-document.addEventListener('keydown', handleKeyDown);
+// Add event listener for the ` key
+document.addEventListener('keydown', (event) => {
+  if (event.key === '`') {
+    event.preventDefault(); // Ngăn chặn hành động mặc định của phím `
+    event.stopPropagation(); // Ngăn chặn sự kiện tiếp tục nổi lên
+
+    if (keypressTimeout) {
+      clearTimeout(keypressTimeout); // Hủy thời gian chờ nếu có double-click
+      doubleClickCooldown = true;
+      increaseTimeFrame();
+
+      setTimeout(() => {
+        doubleClickCooldown = false; // Kết thúc thời gian chờ sau 300ms
+        keypressTimeout = null; // Reset hành động nhấn phím
+      }, 300);
+    } else {
+      keypressTimeout = setTimeout(() => {
+        if (!doubleClickCooldown) {
+          changeTimeFrame();
+        }
+        keypressTimeout = null; // Reset hành động nhấn phím
+      }, 300); // Thời gian chờ 300ms sau khi nhấn
+    }
+  }
+});
