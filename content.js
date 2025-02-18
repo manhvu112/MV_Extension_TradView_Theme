@@ -75,11 +75,11 @@ function applyAdGuardFilters() {
       color: #f2f2f2 !important;
     }
     /* Change color of specific time frames */
-    #header-toolbar-intervals [data-value="3"], 
-    #header-toolbar-intervals [data-value="6"], 
-    #header-toolbar-intervals [data-value="12"], 
-    #header-toolbar-intervals [data-value="24"], 
-    #header-toolbar-intervals [data-value="45"] {
+    #header-toolbar-intervals [data-value="3"]:not(.isActive-GwQQdU8S), 
+    #header-toolbar-intervals [data-value="6"]:not(.isActive-GwQQdU8S), 
+    #header-toolbar-intervals [data-value="12"]:not(.isActive-GwQQdU8S), 
+    #header-toolbar-intervals [data-value="24"]:not(.isActive-GwQQdU8S), 
+    #header-toolbar-intervals [data-value="45"]:not(.isActive-GwQQdU8S) {
       color: #f58800 !important;
     }
   `;
