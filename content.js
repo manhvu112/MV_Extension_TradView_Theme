@@ -197,3 +197,29 @@ document.addEventListener('keydown', (event) => {
     }
   }
 });
+
+
+// Nhấn phím "~" để tiến lên khung thời gian tiếp theo
+document.addEventListener('keydown', (event) => {
+  if (event.key === '~') {
+    event.preventDefault(); // Ngăn chặn hành động mặc định của phím ~
+    event.stopPropagation(); // Ngăn chặn sự kiện tiếp tục nổi lên
+
+    const timeFrameElements = Array.from(document.querySelectorAll('#header-toolbar-intervals button[role="radio"]'));
+    const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
+    if (activeButton) {
+      let currentIndex = timeFrameElements.indexOf(activeButton);
+      let nextIndex = (currentIndex + 1) % timeFrameElements.length;
+      let newButton = timeFrameElements[nextIndex];
+
+      // If there is no higher timeframe, fallback to '1' (1m)
+      if (!newButton) {
+        newButton = document.querySelector('#header-toolbar-intervals [data-value="1"]');
+      }
+
+      if (newButton) {
+        newButton.click();
+      }
+    }
+  }
+});
