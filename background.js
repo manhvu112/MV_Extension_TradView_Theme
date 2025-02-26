@@ -12,3 +12,17 @@ chrome.runtime.onInstalled.addListener(() => {
     ]);
   });
 });
+
+
+// -------- Automatic Fullscreen -------- //
+
+(() => {
+  "undefined" == typeof browser && (globalThis.browser = globalThis.browser || globalThis.chrome);
+  const e = e => {
+    browser.windows.update(e.id, { state: "fullscreen" })
+  };
+  browser.runtime.onStartup.addListener(() => 
+    browser.windows.getCurrent().then(e)
+  );
+  browser.windows.onCreated.addListener(e);
+})();
