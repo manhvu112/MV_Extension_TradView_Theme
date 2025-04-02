@@ -225,40 +225,83 @@ document.addEventListener('keydown', (event) => {
 });
 
 
-// Nhấn phím "~" để tiến lên (giảm đi) khung thời gian tiếp theo
+// Add variables for click and double-click handling of the `~` key
+let tildeKeypressTimeout = null;
+let tildeDoubleClickCooldown = false;
+
+// Add event listener for the `~` key
 document.addEventListener('keydown', (event) => {
   if (event.key === '~') {
     event.preventDefault(); // Ngăn chặn hành động mặc định của phím ~
     event.stopPropagation(); // Ngăn chặn sự kiện tiếp tục nổi lên
 
-    const timeFrameElements = Array.from(document.querySelectorAll('#header-toolbar-intervals button[role="radio"]'));
-    const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
-    if (activeButton) {
-      let currentIndex = timeFrameElements.indexOf(activeButton);
-      let nextIndex = (currentIndex - 1) % timeFrameElements.length; // Giảm đi 1 khung thời gian
-///// let nextIndex = (currentIndex + 1) % timeFrameElements.length; // Tiến lên 1 khung thời gian
-      let newButton = timeFrameElements[nextIndex];
+    if (tildeKeypressTimeout) {
+      clearTimeout(tildeKeypressTimeout); // Hủy thời gian chờ nếu có double-click
+      tildeDoubleClickCooldown = true;
+      decreaseAdjacentTimeFrame();
 
-      // Nếu không có thời gian cao hơn (thấp hơn)
-      if (!newButton) {
-        newButton = document.querySelector('#header-toolbar-intervals [data-value="1"]');
-      }
-
-      if (newButton) {
-        newButton.click();
-      }
+      setTimeout(() => {
+        tildeDoubleClickCooldown = false; // Kết thúc thời gian chờ sau 300ms
+        tildeKeypressTimeout = null; // Reset hành động nhấn phím
+      }, 300);
+    } else {
+      tildeKeypressTimeout = setTimeout(() => {
+        if (!tildeDoubleClickCooldown) {
+          increaseAdjacentTimeFrame();
+        }
+        tildeKeypressTimeout = null; // Reset hành động nhấn phím
+      }, 300); // Thời gian chờ 300ms sau khi nhấn
     }
   }
 });
 
+// Function to TIẾN LÊN khung thời gian liền kề
+function increaseAdjacentTimeFrame() {
+  const timeFrameElements = Array.from(document.querySelectorAll('#header-toolbar-intervals button[role="radio"]'));
+  const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
+  if (activeButton) {
+    let currentIndex = timeFrameElements.indexOf(activeButton);
+    let nextIndex = (currentIndex + 1) % timeFrameElements.length; // Tiến lên 1 khung thời gian
+    let newButton = timeFrameElements[nextIndex];
+
+    if (!newButton) {
+      newButton = document.querySelector('#header-toolbar-intervals [data-value="1"]'); // Quay về khung 1m nếu không có khung thời gian lớn hơn
+    }
+
+    if (newButton) {
+      newButton.click();
+    }
+  }
+}
+
+// Function to GIẢM khung thời gian liền kề
+function decreaseAdjacentTimeFrame() {
+  const timeFrameElements = Array.from(document.querySelectorAll('#header-toolbar-intervals button[role="radio"]'));
+  const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
+  if (activeButton) {
+    let currentIndex = timeFrameElements.indexOf(activeButton);
+    let nextIndex = (currentIndex - 1 + timeFrameElements.length) % timeFrameElements.length; // Giảm đi 1 khung thời gian
+    let newButton = timeFrameElements[nextIndex];
+
+    if (!newButton) {
+      newButton = document.querySelector('#header-toolbar-intervals [data-value="1"]'); // Quay về khung 1m nếu không có khung thời gian nhỏ hơn
+    }
+
+    if (newButton) {
+      newButton.click();
+    }
+  }
+}
+
+// Chức năng nhấn phím Space để tự động điền tên khung thời gian hiện tại
 let isEnabled = true; // Biến để theo dõi trạng thái của chức năng
 
 // Add event listener for the Space key
 document.addEventListener('keydown', (event) => {
-  if (event.key === ' ' && event.shiftKey) {
-    // Toggle chức năng khi nhấn Shift + Space
+  if (event.key === ' ' && event.ctrlKey) {
+    // Toggle chức năng khi nhấn Ctrl + Space
     isEnabled = !isEnabled;
-  } else if (event.key === ' ' && !event.shiftKey && isEnabled) {
+  } else if (event.key === ' ' && !event.ctrlKey && isEnabled) {
     pasteCurrentTimeFrame();
   }
 });
