@@ -250,3 +250,72 @@ document.addEventListener('keydown', (event) => {
     }
   }
 });
+
+let isEnabled = true; // Biến để theo dõi trạng thái của chức năng
+
+// Add event listener for the Space key
+document.addEventListener('keydown', (event) => {
+  if (event.key === ' ' && event.shiftKey) {
+    // Toggle chức năng khi nhấn Shift + Space
+    isEnabled = !isEnabled;
+  } else if (event.key === ' ' && !event.shiftKey && isEnabled) {
+    pasteCurrentTimeFrame();
+  }
+});
+
+// Function to paste the name of the current time frame
+function pasteCurrentTimeFrame() {
+  const timeFrameMap = {
+    '5S': '5s',
+    '10S': '10s',
+    '15S': '15s',
+    '30S': '30s',
+    '45S': '45s',
+    '1': '1m',
+    '2': '2m',
+    '4': '4m',
+    '6': '6m',
+    '8': '8m',
+    '12': '12m',
+    '16': '16m',
+    '24': '24m',
+    '32': '32m',
+    '45': '45m',
+    '60': '1H',
+    '120': '2H',
+    '180': '3H',
+    '240': '4H',
+    '360': '6H',
+    '480': '8H',
+    '720': '12H',
+    '960': '16H',
+    '1D': '1D',
+    '2D': '2D',
+    '3D': '3D',
+    '4D': '4D'
+  };
+
+  const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
+  if (activeButton) {
+    const currentValue = activeButton.getAttribute('data-value');
+    const currentTimeFrameText = (timeFrameMap[currentValue] || currentValue) + '  ';
+
+    // Dán vào vị trí con trỏ chuột
+    const activeElement = document.activeElement;
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+      const start = activeElement.selectionStart;
+      const end = activeElement.selectionEnd;
+      activeElement.value = activeElement.value.substring(0, start) + currentTimeFrameText + activeElement.value.substring(end);
+      activeElement.selectionStart = activeElement.selectionEnd = start + currentTimeFrameText.length;
+    } else {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(document.createTextNode(currentTimeFrameText));
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+  }
+}
