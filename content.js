@@ -124,20 +124,30 @@ window.addEventListener('load', () => {
 // Function to GIẢM khung thời gian dựa trên khung thời gian hiện tại
 function changeTimeFrame() {
   const timeFrameMap = {
-    '1': '15S',   // 1m -> 15s
-    '2': '30S',   // 2m -> 30s
-    '4': '1',    // 4m -> 1m
-    '8': '2',    // 8m -> 2m
-    '16': '4',   // 16m -> 4m
-    '32': '8',   // 32m -> 8m
-    '60': '16',  // 1h -> 16m
-    '120': '32', // 2h -> 32m
-    '240': '60', // 4h -> 1h
-    '480': '120',// 8h -> 2h
-    '960': '240',// 16h -> 4h
-    '1D': '480', // 1D -> 8h
-    '2D': '960', // 2D -> 16h
-    '4D': '1D'   // 4D -> 1D
+    '30S': '10S',   // 30S -> 10s
+    '45S': '15S',   // 45S -> 15s
+    '1': '15S',     // 1m -> 15s
+    '2': '30S',     // 2m -> 30s
+    '4': '1',       // 4m -> 1m
+    '6': '2',       // 6m -> 2m
+    '8': '2',       // 8m -> 2m
+    '12': '4',      // 12m -> 4m
+    '16': '4',      // 16m -> 4m
+    '24': '8',      // 24m -> 8m
+    '32': '8',      // 32m -> 8m
+    '45': '16',     // 45m -> 16m
+    '60': '16',     // 1h -> 16m
+    '120': '32',    // 2h -> 32m
+    '180': '60',    // 3h -> 1h
+    '240': '60',    // 4h -> 1h
+    '360': '120',   // 6h -> 2h
+    '480': '120',   // 8h -> 2h
+    '720': '240',   // 12h -> 4h
+    '960': '240',   // 16h -> 4h
+    '1D': '480',    // 1D -> 8h
+    '2D': '720',    // 2D -> 12h
+    '3D': '1D',     // 3D -> 1D
+    '4D': '1D'      // 4D -> 1D
   };
 
   const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
@@ -154,6 +164,8 @@ function changeTimeFrame() {
 // Function to TĂNG khung thời gian dựa trên khung thời gian hiện tại
 function increaseTimeFrame() {
   const timeFrameMap = {
+    '5S': '15S',  // 5s -> 15s
+    '10S': '30S', // 10s -> 30s
     '15S': '1',   // 15s -> 1m
     '30S': '2',   // 30s -> 2m
     '1': '4',     // 1m -> 4m
@@ -213,7 +225,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 
-// Nhấn phím "~" để tiến lên khung thời gian tiếp theo
+// Nhấn phím "~" để tiến lên (giảm đi) khung thời gian tiếp theo
 document.addEventListener('keydown', (event) => {
   if (event.key === '~') {
     event.preventDefault(); // Ngăn chặn hành động mặc định của phím ~
@@ -223,10 +235,11 @@ document.addEventListener('keydown', (event) => {
     const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
     if (activeButton) {
       let currentIndex = timeFrameElements.indexOf(activeButton);
-      let nextIndex = (currentIndex + 1) % timeFrameElements.length;
+      let nextIndex = (currentIndex - 1) % timeFrameElements.length; // Giảm đi 1 khung thời gian
+///// let nextIndex = (currentIndex + 1) % timeFrameElements.length; // Tiến lên 1 khung thời gian
       let newButton = timeFrameElements[nextIndex];
 
-      // If there is no higher timeframe, fallback to '1' (1m)
+      // Nếu không có thời gian cao hơn (thấp hơn)
       if (!newButton) {
         newButton = document.querySelector('#header-toolbar-intervals [data-value="1"]');
       }
