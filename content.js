@@ -296,56 +296,91 @@ function decreaseAdjacentTimeFrame() {
 // Chức năng nhấn phím Space để tự động điền tên khung thời gian hiện tại
 let isEnabled = true; // Biến để theo dõi trạng thái của chức năng
 
-// Add event listener for the Space key
+// Add event listener for double click
+document.addEventListener('dblclick', (event) => {
+  if (isEnabled) {
+    pasteCurrentTimeFrame();
+    setTimeout(simulateSpaceKeyPress, 200); // Thực hiện thao tác nhấn phím Space sau khi dán tên khung thời gian
+  }
+});
+
+// Add event listener for the Ctrl + Space key to toggle the feature
 document.addEventListener('keydown', (event) => {
   if (event.key === ' ' && event.ctrlKey) {
     // Toggle chức năng khi nhấn Ctrl + Space
     isEnabled = !isEnabled;
-  } else if (event.key === ' ' && !event.ctrlKey && isEnabled) {
-    pasteCurrentTimeFrame();
+    console.log('Toggled isEnabled:', isEnabled);
   }
 });
 
 // Function to paste the name of the current time frame
 function pasteCurrentTimeFrame() {
   const timeFrameMap = {
-    '5S': '5s',
-    '10S': '10s',
-    '15S': '15s',
-    '30S': '30s',
-    '45S': '45s',
     '1': '1m',
     '2': '2m',
     '3': '3m',
     '4': '4m',
     '5': '5m',
     '6': '6m',
+    '7': '7m',
     '8': '8m',
+    '9': '9m',
     '10': '10m',
+    '11': '11m',
     '12': '12m',
+    '13': '13m',
+    '14': '14m',
     '15': '15m',
     '16': '16m',
+    '17': '17m',
+    '18': '18m',
+    '19': '19m',
+    '20': '20m',
+    '21': '21m',
+    '22': '22m',
+    '23': '23m',
     '24': '24m',
+    '25': '25m',
+    '26': '26m',
+    '27': '27m',
+    '28': '28m',
+    '29': '29m',
+    '30': '30m',
+    '31': '31m',
     '32': '32m',
+    '33': '33m',
+    '34': '34m',
+    '35': '35m',
+    '36': '36m',
+    '37': '37m',
+    '38': '38m',
+    '39': '39m',
+    '40': '40m',
+    '41': '41m',
+    '42': '42m',
+    '43': '43m',
+    '44': '44m',
     '45': '45m',
-    '60': '1H',
-    '120': '2H',
-    '180': '3H',
-    '240': '4H',
-    '360': '6H',
-    '480': '8H',
-    '720': '12H',
-    '960': '16H',
-    '1D': '1D',
-    '2D': '2D',
-    '3D': '3D',
-    '4D': '4D'
+    '46': '46m',
+    '47': '47m',
+    '48': '48m',
+    '49': '49m',
+    '50': '50m',
+    '51': '51m',
+    '52': '52m',
+    '53': '53m',
+    '54': '54m',
+    '55': '55m',
+    '56': '56m',
+    '57': '57m',
+    '58': '58m',
+    '59': '59m'
   };
 
   const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
   if (activeButton) {
     const currentValue = activeButton.getAttribute('data-value');
-    const currentTimeFrameText = (timeFrameMap[currentValue] || currentValue) + '  ';
+    const currentTimeFrameText = (timeFrameMap[currentValue] || currentValue) + '   ';
 
     // Dán vào vị trí con trỏ chuột
     const activeElement = document.activeElement;
@@ -353,6 +388,7 @@ function pasteCurrentTimeFrame() {
       const start = activeElement.selectionStart;
       const end = activeElement.selectionEnd;
       activeElement.value = activeElement.value.substring(0, start) + currentTimeFrameText + activeElement.value.substring(end);
+      activeElement.dispatchEvent(new Event('input', { bubbles: true })); // Trigger input event
       activeElement.selectionStart = activeElement.selectionEnd = start + currentTimeFrameText.length;
     } else {
       const selection = window.getSelection();
@@ -365,4 +401,30 @@ function pasteCurrentTimeFrame() {
       }
     }
   }
+}
+
+// Function to simulate space key press
+function simulateSpaceKeyPress() {
+  console.log('Simulating space key press');
+  const spaceDownEvent = new KeyboardEvent('keydown', {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 32, // Space key code
+    which: 32,
+    key: ' ',
+    code: 'Space',
+    view: window
+  });
+  document.dispatchEvent(spaceDownEvent);
+
+  const spaceUpEvent = new KeyboardEvent('keyup', {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 32, // Space key code
+    which: 32,
+    key: ' ',
+    code: 'Space',
+    view: window
+  });
+  document.dispatchEvent(spaceUpEvent);
 }
