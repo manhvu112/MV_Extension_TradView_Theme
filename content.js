@@ -374,7 +374,15 @@ function pasteCurrentTimeFrame() {
     '56': '56m',
     '57': '57m',
     '58': '58m',
-    '59': '59m'
+    '59': '59m',
+    '60': '1H',
+    '120': '2H',
+    '180': '3H',
+    '240': '4H',
+    '360': '6H',
+    '480': '8H',
+    '720': '12H',
+    '960': '16H',
   };
 
   const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
