@@ -293,14 +293,19 @@ function decreaseAdjacentTimeFrame() {
   }
 }
 
-// Chức năng nhấn phím Space để tự động điền tên khung thời gian hiện tại
+// Chức năng Double Click chuột để tự động điền tên khung thời gian hiện tại
 let isEnabled = true; // Biến để theo dõi trạng thái của chức năng
+let lastDoubleClickTime = 0; // Thời gian của lần double click cuối cùng
+let checkCursorInterval = null; // Interval để kiểm tra con trỏ chuột
+let hasPastedTimeFrame = false; // Biến để theo dõi trạng thái đã dán tên khung thời gian
 
 // Add event listener for double click
 document.addEventListener('dblclick', (event) => {
   if (isEnabled) {
-    pasteCurrentTimeFrame();
-    setTimeout(simulateSpaceKeyPress, 200); // Thực hiện thao tác nhấn phím Space sau khi dán tên khung thời gian
+    lastDoubleClickTime = Date.now();
+    hasPastedTimeFrame = false; // Reset trạng thái đã dán tên khung thời gian
+    checkCursorInterval = setInterval(checkAndPasteTimeFrame, 100); // Kiểm tra con trỏ chuột mỗi 100ms trong vòng 1,1 giây
+    setTimeout(() => clearInterval(checkCursorInterval), 1100); // Dừng kiểm tra sau 1,1 giây
   }
 });
 
@@ -312,6 +317,16 @@ document.addEventListener('keydown', (event) => {
     console.log('Toggled isEnabled:', isEnabled);
   }
 });
+
+// Kiểm tra nếu con trỏ chuột đang trong trạng thái gõ văn bản và dán tên khung thời gian
+function checkAndPasteTimeFrame() {
+  const activeElement = document.activeElement;
+  if (!hasPastedTimeFrame && activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+    pasteCurrentTimeFrame();
+    hasPastedTimeFrame = true; // Đặt trạng thái đã dán tên khung thời gian
+    clearInterval(checkCursorInterval); // Dừng kiểm tra sau khi dán
+  }
+}
 
 // Function to paste the name of the current time frame
 function pasteCurrentTimeFrame() {
@@ -388,7 +403,7 @@ function pasteCurrentTimeFrame() {
   const activeButton = document.querySelector('#header-toolbar-intervals .isActive-GwQQdU8S');
   if (activeButton) {
     const currentValue = activeButton.getAttribute('data-value');
-    const currentTimeFrameText = (timeFrameMap[currentValue] || currentValue) + '   ';
+    const currentTimeFrameText = (timeFrameMap[currentValue] || currentValue) + '   '; // Thêm ba khoảng trắng vào sau tên khung thời gian
 
     // Dán vào vị trí con trỏ chuột
     const activeElement = document.activeElement;
@@ -409,30 +424,4 @@ function pasteCurrentTimeFrame() {
       }
     }
   }
-}
-
-// Function to simulate space key press
-function simulateSpaceKeyPress() {
-  console.log('Simulating space key press');
-  const spaceDownEvent = new KeyboardEvent('keydown', {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 32, // Space key code
-    which: 32,
-    key: ' ',
-    code: 'Space',
-    view: window
-  });
-  document.dispatchEvent(spaceDownEvent);
-
-  const spaceUpEvent = new KeyboardEvent('keyup', {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 32, // Space key code
-    which: 32,
-    key: ' ',
-    code: 'Space',
-    view: window
-  });
-  document.dispatchEvent(spaceUpEvent);
 }
