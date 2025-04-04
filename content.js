@@ -98,6 +98,8 @@ div.js-rootresizer__contents:nth-child(2) > div.black-border-bigger-radius > div
       color: #f2f2f2 !important;
     }
     /* Change color of specific time frames */
+    #header-toolbar-intervals [data-value="10S"]:not(.isActive-GwQQdU8S), 
+    #header-toolbar-intervals [data-value="45S"]:not(.isActive-GwQQdU8S), 
     #header-toolbar-intervals [data-value="3"]:not(.isActive-GwQQdU8S), 
     #header-toolbar-intervals [data-value="6"]:not(.isActive-GwQQdU8S), 
     #header-toolbar-intervals [data-value="12"]:not(.isActive-GwQQdU8S), 
