@@ -62,6 +62,8 @@ function addSwitchButton() {
 function applyAdGuardFilters() {
   const style = document.createElement('style');
   style.textContent = `
+#header-toolbar-intervals .isActive-GwQQdU8S {color: #2962ff !important; //Màu chữ khung thời gian hiện tại}
+
 html.theme-dark .black-border-bigger-radius { --chart-widget-border-color: transparent !important; }
 #header-toolbar-study-templates > button.button-merBkM5y.apply-common-tooltip.accessible-merBkM5y > div.button-ptpAHg8E.withoutText-ptpAHg8E.button-GwQQdU8S.isInteractive-GwQQdU8S { display: none !important; }
 #header-toolbar-indicators > button.button-merBkM5y.apply-common-tooltip.accessible-merBkM5y:last-child > div.arrow-merBkM5y { display: none !important; }
