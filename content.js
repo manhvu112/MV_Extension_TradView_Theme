@@ -13,9 +13,20 @@ function enterFullScreen() {
   document.dispatchEvent(altEnterEvent);
 }
 
+// --- RESET FUNCTION FOR SWITCH BUTTON ---
+function resetSwitchButtonState() {
+  // Remove the old button if exists
+  const oldBtn = document.getElementById('switch-btn-custom');
+  if (oldBtn) oldBtn.remove();
+
+  // Re-add the switch button
+  addSwitchButton();
+}
+
 // Function to add a transparent button that acts as the Switch button
 function addSwitchButton() {
   const switchButton = document.createElement('button');
+  switchButton.id = 'switch-btn-custom'; // Assign a specific id for easier reset
   switchButton.innerText = 'Switch';
   switchButton.style.position = 'fixed';
   switchButton.style.top = '0';
@@ -32,26 +43,27 @@ function addSwitchButton() {
   let doubleClickCooldown = false;
 
   switchButton.addEventListener('click', () => {
-    if (doubleClickCooldown) return; // Không làm gì nếu đang trong thời gian chờ double-click
-
+    if (doubleClickCooldown) return;
     clickTimeout = setTimeout(() => {
       if (!doubleClickCooldown) {
         changeTimeFrame();
+        resetSwitchButtonState(); // <--- RESET after click
       }
       clickTimeout = null;
-    }, 300); // Thời gian chờ 300ms sau khi click
+    }, 300);
   });
 
   switchButton.addEventListener('dblclick', () => {
     if (clickTimeout) {
-      clearTimeout(clickTimeout); // Hủy thời gian chờ click nếu có double-click
+      clearTimeout(clickTimeout);
       clickTimeout = null;
     }
     doubleClickCooldown = true;
     increaseTimeFrame();
+    resetSwitchButtonState(); // <--- RESET after double-click
 
     setTimeout(() => {
-      doubleClickCooldown = false; // Kết thúc thời gian chờ sau 300ms
+      doubleClickCooldown = false;
     }, 300);
   });
 
@@ -63,7 +75,6 @@ function applyAdGuardFilters() {
   const style = document.createElement('style');
   style.textContent = `
 #header-toolbar-intervals .isActive-GwQQdU8S {color: #2962ff !important; //Màu chữ khung thời gian hiện tại}
-
 html.theme-dark .black-border-bigger-radius { --chart-widget-border-color: transparent !important; }
 #header-toolbar-study-templates > button.button-merBkM5y.apply-common-tooltip.accessible-merBkM5y > div.button-ptpAHg8E.withoutText-ptpAHg8E.button-GwQQdU8S.isInteractive-GwQQdU8S { display: none !important; }
 #header-toolbar-indicators > button.button-merBkM5y.apply-common-tooltip.accessible-merBkM5y:last-child > div.arrow-merBkM5y { display: none !important; }
@@ -122,7 +133,7 @@ window.addEventListener('load', () => {
     enterFullScreen();
     addSwitchButton();
     applyAdGuardFilters();
-  }, 1000); // Delay to ensure the page has fully loaded
+  }, 1000);
 });
 
 // Function to GIẢM khung thời gian dựa trên khung thời gian hiện tại
