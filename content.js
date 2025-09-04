@@ -321,9 +321,13 @@ document.addEventListener('dblclick', (event) => {
     hasPastedTimeFrame = false; // Reset trạng thái đã dán tên khung thời gian
     checkCursorInterval = setInterval(checkAndPasteTimeFrame, 100); // Kiểm tra con trỏ chuột mỗi 100ms trong vòng 1,1 giây
     setTimeout(() => clearInterval(checkCursorInterval), 1100); // Dừng kiểm tra sau 1,1 giây
+
+    // --- Reset lại chức năng sau 1 giây ---
+    setTimeout(() => {
+      hasPastedTimeFrame = false;
+    }, 1000);
   }
 });
-
 // Add event listener for the Ctrl + Space key to toggle the feature
 document.addEventListener('keydown', (event) => {
   if (event.key === ' ' && event.ctrlKey) {
