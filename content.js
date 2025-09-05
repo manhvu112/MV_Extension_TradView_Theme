@@ -213,8 +213,17 @@ function increaseTimeFrame() {
 let keypressTimeout = null;
 let doubleClickCooldown = false;
 
-// Add event listener for the ` key
+// Add event listener for the ` key và Ctrl + Space
 document.addEventListener('keydown', (event) => {
+  // Ctrl + Space để dán tên khung thời gian hiện tại
+  if (event.key === ' ' && event.ctrlKey) {
+    event.preventDefault();
+    event.stopPropagation();
+    pasteCurrentTimeFrame(); // gọi hàm paste khung thời gian
+    return; // không chạy tiếp các đoạn dưới
+  }
+
+  // Xử lý cho phím `
   if (event.key === '`') {
     event.preventDefault(); // Ngăn chặn hành động mặc định của phím `
     event.stopPropagation(); // Ngăn chặn sự kiện tiếp tục nổi lên
@@ -238,7 +247,6 @@ document.addEventListener('keydown', (event) => {
     }
   }
 });
-
 
 // Add variables for click and double-click handling of the `~` key
 let tildeKeypressTimeout = null;
@@ -305,45 +313,6 @@ function decreaseAdjacentTimeFrame() {
     if (newButton) {
       newButton.click();
     }
-  }
-}
-
-// Chức năng Double Click chuột để tự động điền tên khung thời gian hiện tại
-let isEnabled = true; // Biến để theo dõi trạng thái của chức năng
-let lastDoubleClickTime = 0; // Thời gian của lần double click cuối cùng
-let checkCursorInterval = null; // Interval để kiểm tra con trỏ chuột
-let hasPastedTimeFrame = false; // Biến để theo dõi trạng thái đã dán tên khung thời gian
-
-// Add event listener for double click
-document.addEventListener('dblclick', (event) => {
-  if (isEnabled) {
-    lastDoubleClickTime = Date.now();
-    hasPastedTimeFrame = false; // Reset trạng thái đã dán tên khung thời gian
-    checkCursorInterval = setInterval(checkAndPasteTimeFrame, 100); // Kiểm tra con trỏ chuột mỗi 100ms trong vòng 1,1 giây
-    setTimeout(() => clearInterval(checkCursorInterval), 1100); // Dừng kiểm tra sau 1,1 giây
-
-    // --- Reset lại chức năng sau 1 giây ---
-    setTimeout(() => {
-      hasPastedTimeFrame = false;
-    }, 1000);
-  }
-});
-// Add event listener for the Ctrl + Space key to toggle the feature
-document.addEventListener('keydown', (event) => {
-  if (event.key === ' ' && event.ctrlKey) {
-    // Toggle chức năng khi nhấn Ctrl + Space
-    isEnabled = !isEnabled;
-    console.log('Toggled isEnabled:', isEnabled);
-  }
-});
-
-// Kiểm tra nếu con trỏ chuột đang trong trạng thái gõ văn bản và dán tên khung thời gian
-function checkAndPasteTimeFrame() {
-  const activeElement = document.activeElement;
-  if (!hasPastedTimeFrame && activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
-    pasteCurrentTimeFrame();
-    hasPastedTimeFrame = true; // Đặt trạng thái đã dán tên khung thời gian
-    clearInterval(checkCursorInterval); // Dừng kiểm tra sau khi dán
   }
 }
 
