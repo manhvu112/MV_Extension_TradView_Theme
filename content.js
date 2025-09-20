@@ -213,14 +213,31 @@ function increaseTimeFrame() {
 let keypressTimeout = null;
 let doubleClickCooldown = false;
 
-// Add event listener for the ` key và Ctrl + Space
+let ctrlKeyPressTimeout = null;
+let ctrlDoubleClickCooldown = false;
+
+// Nhấn phím Ctrl 2 lần để dán tên khung thời gian:
 document.addEventListener('keydown', (event) => {
-  // Ctrl + Space để dán tên khung thời gian hiện tại
-  if (event.key === ' ' && event.ctrlKey) {
+  // Xử lý nhấn liên tiếp hai lần phím Ctrl
+  if (event.key === 'Control') {
     event.preventDefault();
     event.stopPropagation();
-    pasteCurrentTimeFrame(); // gọi hàm paste khung thời gian
-    return; // không chạy tiếp các đoạn dưới
+
+    if (ctrlKeyPressTimeout) {
+      clearTimeout(ctrlKeyPressTimeout);
+      ctrlDoubleClickCooldown = true;
+      pasteCurrentTimeFrame();
+
+      setTimeout(() => {
+        ctrlDoubleClickCooldown = false;
+        ctrlKeyPressTimeout = null;
+      }, 200);   // Trong vòng 200ms cần nhấn phím Ctrl lần 2 để thực hiện hành động
+    } else if (!ctrlDoubleClickCooldown) {
+      ctrlKeyPressTimeout = setTimeout(() => {
+        ctrlKeyPressTimeout = null;
+      }, 1000);  // Khoá chức năng trong vòng 1s
+    }
+    return;
   }
 
   // Xử lý cho phím `
